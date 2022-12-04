@@ -2,11 +2,11 @@ package com.vivi.retrofitexample
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.telecom.Call
 import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Toast
+import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //https://mocki.io/v1/0c0939ad-c7a1-4d6c-bec9-bda2abcbf245
+        //https://mocki.io/v1/61eb3e08-57ae-4401-b398-d29295b2832b
 
         listview = findViewById(R.id.listView)
         var retrofit = Retrofit.Builder().baseUrl("https://mocki.io/v1/")
@@ -29,25 +29,24 @@ class MainActivity : AppCompatActivity() {
 
         val api = retrofit.create(SuperheroAPI::class.java)
 
-        api.getHeroes().enqueue(object : Callback<Heros> {
+        api.getHeroes().enqueue(object : Callback<List<Heros>>{
 
-            override fun onFailure(call: retrofit2.Call<Heros>, t: Throwable) {
+            override fun onFailure(call: Call<List<Heros>>, t: Throwable) {
                 Toast.makeText(applicationContext,t.message,Toast.LENGTH_LONG).show()
                 Log.e("Vivi", "${t.message}")
             }
 
-            override fun onResponse(
-                call: retrofit2.Call<Heros>,
-                response: Response<Heros>
-            ) {
-                val heroList = response.body()
+            override fun onResponse(call: Call<List<Heros>>,
+                                    response: Response<List<Heros>>) {
+                val heroList: List<Heros>? = response.body()
+
                 heroList?.let {
-
-                    heroes = arrayOf(it.name)
-
-
-
+                    heroes = arrayOfNulls<String>(it.size)
+                    for (i in it.indices){
+                        heroes[i]=heroList[i].name
+                    }
                 }
+
 
                 listview.adapter = ArrayAdapter(
                     applicationContext, android.R.layout.simple_list_item_1,
