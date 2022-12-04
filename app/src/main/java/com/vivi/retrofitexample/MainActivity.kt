@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         //https://mocki.io/v1/61eb3e08-57ae-4401-b398-d29295b2832b
 
         listview = findViewById(R.id.listView)
-        var retrofit = Retrofit.Builder().baseUrl("https://mocki.io/v1/")
+        var retrofit = Retrofit.Builder().baseUrl(Utils.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create()).build()
 
         val api = retrofit.create(SuperheroAPI::class.java)
